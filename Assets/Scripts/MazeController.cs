@@ -44,88 +44,84 @@ public class MazeController : MonoBehaviour
         {
 
             // Find the first open spot
-            (int x_c, int y_c) = FindOpenMazeCell(boolMaze);
+            MazeCell current = FindOpenMazeCell(boolMaze);
 
             // base condition:
             // no open stops found algorithm finishes
-            if (x_c == -1 && y_c == -1)
+            if (current == null)
             {
                 break;
             }
 
             // Debug.Log("Test1: Current: " + x_c + ", " + y_c);
-            maze[x_c, y_c].SetWallColor(Color.red);
+            current.SetWallColor(Color.red);
 
             yield return new WaitForSeconds(GameManager.instance.GetMapGenerationSpeed());
 
             if (!isFirstRun)
             {
-                List<(int x, int y)> closedMazeCells = FindAdjacentClosedMazeCells(boolMaze, x_c, y_c);
+                List<MazeCell> closedMazeCells = FindAdjacentClosedMazeCells(boolMaze, current);
                 int closedCellIndex = Random.Range(0, closedMazeCells.Count);
-                (int x_o, int y_o) = closedMazeCells[closedCellIndex];
-                OpenWalls(x_c, y_c, x_o, y_o);
+                MazeCell next = closedMazeCells[closedCellIndex];
+                OpenWalls(current, next);
             }
 
-            List<(int x, int y)> openMazeCells = FindAdjacentOpenMazeCells(boolMaze, x_c, y_c);
+            List<MazeCell> openMazeCells = FindAdjacentOpenMazeCells(boolMaze, current);
             while (openMazeCells.Count != 0)
             {
                 yield return new WaitForSeconds(GameManager.instance.GetMapGenerationSpeed());
 
                 int nextMazeCellIndex = Random.Range(0, openMazeCells.Count);
 
-                (int x_n, int y_n) = openMazeCells[nextMazeCellIndex];
+                MazeCell next = openMazeCells[nextMazeCellIndex];
 
-                OpenWalls(x_c, y_c, x_n, y_n);
+                OpenWalls(current, next);
 
-                boolMaze[x_c, y_c] = true;
-                maze[x_c, y_c].SetWallColor(Color.gray);
+                boolMaze[current.GetX(), current.GetY()] = true;
+                current.SetWallColor(Color.gray);
 
-                x_c = x_n;
-                y_c = y_n;
-                maze[x_c, y_c].SetWallColor(Color.red);
-                openMazeCells = FindAdjacentOpenMazeCells(boolMaze, x_c, y_c);
+                current = next;
+                current.SetWallColor(Color.red);
+                openMazeCells = FindAdjacentOpenMazeCells(boolMaze, current);
             }
 
-            boolMaze[x_c, y_c] = true;
-            maze[x_c, y_c].DisableCenterWall();
-            maze[x_c, y_c].SetWallColor(Color.gray);
+            boolMaze[current.GetX(), current.GetY()] = true;
+            current.DisableCenterWall();
+            current.SetWallColor(Color.gray);
             isFirstRun = false;
         }
 
         GameManager.instance.CreatePlayer();
     }
 
-    private void OpenWalls(int x_c, int y_c, int x_n, int y_n)
+    private void OpenWalls(MazeCell current, MazeCell next)
     {
-        MazeCell currentMazeCell = maze[x_c, y_c];
-        MazeCell nextMazeCell = maze[x_n, y_n];
+        (int x_t, int y_t) = (current.GetX() - next.GetX(), current.GetY() - next.GetY());
 
-        (int x_t, int y_t) = (x_c - x_n, y_c - y_n);
-
-        currentMazeCell.DisableCenterWall();
+        current.DisableCenterWall();
         if (x_t == 0 && y_t == 1)
         {
-            currentMazeCell.DisableNorthWall();
-            nextMazeCell.DisableSouthWall();
+            current.DisableNorthWall();
+            next.DisableSouthWall();
         }
         if (x_t == 0 && y_t == -1)
         {
-            currentMazeCell.DisableSouthWall();
-            nextMazeCell.DisableNorthWall();
+            current.DisableSouthWall();
+            next.DisableNorthWall();
         }
         if (x_t == 1 && y_t == 0)
         {
-            currentMazeCell.DisableEastWall();
-            nextMazeCell.DisableWestWall();
+            current.DisableEastWall();
+            next.DisableWestWall();
         }
         if (x_t == -1 && y_t == 0)
         {
-            currentMazeCell.DisableWestWall();
-            nextMazeCell.DisableEastWall();
+            current.DisableWestWall();
+            next.DisableEastWall();
         }
     }
 
-    private (int x, int y) FindOpenMazeCell(bool[,] boolMaze)
+    private MazeCell FindOpenMazeCell(bool[,] boolMaze)
     {
         for (int i = 0; i < maze.GetLength(0); i++)
         {
@@ -133,17 +129,17 @@ public class MazeController : MonoBehaviour
             {
                 if (!boolMaze[i, j])
                 {
-                    return (i, j);
+                    return maze[i, j];
                 }
             }
         }
 
-        return (-1, -1);
+        return null;
     }
 
-    private List<(int x, int y)> FindAdjacentOpenMazeCells(bool[,] boolMaze, int x, int y)
+    private List<MazeCell> FindAdjacentOpenMazeCells(bool[,] boolMaze, MazeCell current)
     {
-        List<(int x, int y)> openMazeCell = new List<(int x, int y)>();
+        List<MazeCell> openMazeCell = new List<MazeCell>();
 
         (int x, int y)[] positions = new (int x, int y)[4]
         {
@@ -155,8 +151,8 @@ public class MazeController : MonoBehaviour
 
         for (int i = 0; i < positions.Length; i++)
         {
-            int x_p = x + positions[i].x;
-            int y_p = y + positions[i].y;
+            int x_p = current.GetX() + positions[i].x;
+            int y_p = current.GetY() + positions[i].y;
 
             if ((x_p >= 0 && x_p < boolMaze.GetLength(0))
                 &&
@@ -164,16 +160,16 @@ public class MazeController : MonoBehaviour
                 &&
                 !boolMaze[x_p, y_p])
             {
-                openMazeCell.Add((x_p, y_p));
+                openMazeCell.Add(maze[x_p, y_p]);
             }
         }
 
         return openMazeCell;
     }
 
-    private List<(int x, int y)> FindAdjacentClosedMazeCells(bool[,] boolMaze, int x, int y)
+    private List<MazeCell> FindAdjacentClosedMazeCells(bool[,] boolMaze, MazeCell current)
     {
-        List<(int x, int y)> openMazeCell = new List<(int x, int y)>();
+        List<MazeCell> closedMazeCell = new List<MazeCell>();
 
         (int x, int y)[] positions = new (int x, int y)[4]
         {
@@ -185,8 +181,8 @@ public class MazeController : MonoBehaviour
 
         for (int i = 0; i < positions.Length; i++)
         {
-            int x_p = x + positions[i].x;
-            int y_p = y + positions[i].y;
+            int x_p = current.GetX() + positions[i].x;
+            int y_p = current.GetY() + positions[i].y;
 
             if ((x_p >= 0 && x_p < boolMaze.GetLength(0))
                 &&
@@ -194,11 +190,11 @@ public class MazeController : MonoBehaviour
                 &&
                 boolMaze[x_p, y_p])
             {
-                openMazeCell.Add((x_p, y_p));
+                closedMazeCell.Add(maze[x_p, y_p]);
             }
         }
 
-        return openMazeCell;
+        return closedMazeCell;
     }
 
     private const float offset = .5f;

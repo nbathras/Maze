@@ -460,13 +460,13 @@ MonoBehaviour:
     type: 3}
   prefGoal: {fileID: 1053912879568414727, guid: a28df3163ee0d5d46a6073913cb849fa,
     type: 3}
-  mazeWidth: 10
+  mazeWidth: 7
   mazeHeight: 10
-  mapScale: 10
-  mapGenerationSpeed: 0.01
+  mapGenerationSpeed: 0.25
   mazeControllerGameObject: {fileID: 541215190}
   setupCamera: {fileID: 503617470}
   uIController: {fileID: 1739103393}
+  mazeController: {fileID: 0}
 --- !u!4 &1209250084
 Transform:
   m_ObjectHideFlags: 0

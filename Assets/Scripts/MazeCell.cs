@@ -31,6 +31,14 @@ public class MazeCell : MonoBehaviour
         centerWallRenderer = centerWall.GetComponent<Renderer>();
     }
 
+    /* Getters */
+    public int GetX() {
+        return cord.x;
+    }
+    public int GetY() {
+        return cord.y;
+    }
+
     /* Setters */
     public void SetName(int i_x, int i_y) {
         gameObject.name = "MazeCell (" + i_x + "," + i_y + ")";
