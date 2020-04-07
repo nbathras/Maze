@@ -25,7 +25,7 @@ public class MazeController : MonoBehaviour
                 );
                 gameObject.name = "MazeCell (" + i + "," + j + ")";
 
-                gameObject.transform.SetParent(transform);
+                // gameObject.transform.SetParent(transform);
 
                 maze[i, j] = gameObject.GetComponent<MazeCell>();
                 maze[i, j].SetWallColor(Color.green);
@@ -200,15 +200,24 @@ public class MazeController : MonoBehaviour
         return openMazeCell;
     }
 
-        private const float xOffset = -4.5f;
-    private const float yOffset = 0f;
-    private const float zOffset = 4.5f;
+    private const float offset = .5f;
     public Vector3 MazeCordToWorldCord(int x, int y)
     {
         return new Vector3(
-            (xOffset * (maze.GetLength(0) / GameManager.instance.GetMapScale()) + x),
-            (yOffset),
-            (zOffset * (maze.GetLength(1) / GameManager.instance.GetMapScale()) - y)
+            -maze.GetLength(0) / 2f + offset + x,
+            0,
+            maze.GetLength(1) / 2f - offset - y
+        );
+    }
+
+    public (int x, int y) WorldCordToMazeCord(Vector3 worldCord) {
+        float w_x = worldCord.x;
+        float w_z = worldCord.z;
+
+        return
+        (
+            Mathf.RoundToInt(w_x - (-maze.GetLength(0) / 2f + offset)),
+            Mathf.RoundToInt((maze.GetLength(1) / 2f - offset) - w_z)
         );
     }
 }

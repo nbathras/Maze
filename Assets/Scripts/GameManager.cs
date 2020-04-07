@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int mazeHeight = 1;
     [SerializeField]
-    private int mapScale = 10;
-    [SerializeField]
     private float mapGenerationSpeed = .25f;
 
     /* GameObject instances */
@@ -32,7 +30,7 @@ public class GameManager : MonoBehaviour
     /* Component instances */
     [SerializeField]
     private UIController uIController;
-    private MazeController mazeController;
+    public MazeController mazeController;
     private Player player;
 
     private void Awake()
@@ -43,9 +41,9 @@ public class GameManager : MonoBehaviour
         }
 
         mazeControllerGameObject.transform.localScale = new Vector3(
-            mazeWidth / GetMapScale(),
+            mazeWidth / 10f,
             1,
-            mazeHeight / GetMapScale()
+            mazeHeight / 10f
         );
 
         mazeController = mazeControllerGameObject.GetComponent<MazeController>();
@@ -67,11 +65,6 @@ public class GameManager : MonoBehaviour
     }
 
     /* Getter */
-    public float GetMapScale()
-    {
-        return mapScale;
-    }
-
     public float GetMapGenerationSpeed()
     {
         return mapGenerationSpeed;
