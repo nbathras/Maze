@@ -23,12 +23,13 @@ public class MazeController : MonoBehaviour
                     mazeCellPosition,
                     new Quaternion()
                 );
-                gameObject.name = "MazeCell (" + i + "," + j + ")";
+                // gameObject.name = "MazeCell (" + i + "," + j + ")";
 
                 // gameObject.transform.SetParent(transform);
 
                 maze[i, j] = gameObject.GetComponent<MazeCell>();
                 maze[i, j].SetWallColor(Color.green);
+                maze[i, j].SetName(i, j);
             }
         }
 
