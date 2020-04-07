@@ -23,8 +23,6 @@ public class MazeController : MonoBehaviour
                     mazeCellPosition,
                     new Quaternion()
                 );
-                // gameObject.name = "MazeCell (" + i + "," + j + ")";
-
                 // gameObject.transform.SetParent(transform);
 
                 maze[i, j] = gameObject.GetComponent<MazeCell>();
@@ -63,7 +61,7 @@ public class MazeController : MonoBehaviour
                 List<MazeCell> closedMazeCells = FindAdjacentClosedMazeCells(boolMaze, current);
                 int closedCellIndex = Random.Range(0, closedMazeCells.Count);
                 MazeCell next = closedMazeCells[closedCellIndex];
-                OpenWalls(current, next);
+                MazeCell.ConnectMazeCells(current, next);
             }
 
             List<MazeCell> openMazeCells = FindAdjacentOpenMazeCells(boolMaze, current);
@@ -75,7 +73,7 @@ public class MazeController : MonoBehaviour
 
                 MazeCell next = openMazeCells[nextMazeCellIndex];
 
-                OpenWalls(current, next);
+                MazeCell.ConnectMazeCells(current, next);
 
                 boolMaze[current.GetX(), current.GetY()] = true;
                 current.SetWallColor(Color.gray);
@@ -94,31 +92,8 @@ public class MazeController : MonoBehaviour
         GameManager.instance.CreatePlayer();
     }
 
-    private void OpenWalls(MazeCell current, MazeCell next)
-    {
-        (int x_t, int y_t) = (current.GetX() - next.GetX(), current.GetY() - next.GetY());
-
-        current.DisableCenterWall();
-        if (x_t == 0 && y_t == 1)
-        {
-            current.DisableNorthWall();
-            next.DisableSouthWall();
-        }
-        if (x_t == 0 && y_t == -1)
-        {
-            current.DisableSouthWall();
-            next.DisableNorthWall();
-        }
-        if (x_t == 1 && y_t == 0)
-        {
-            current.DisableEastWall();
-            next.DisableWestWall();
-        }
-        if (x_t == -1 && y_t == 0)
-        {
-            current.DisableWestWall();
-            next.DisableEastWall();
-        }
+    public MazeCell GetMazeCell(int x, int y) {
+        return maze[x, y];
     }
 
     private MazeCell FindOpenMazeCell(bool[,] boolMaze)

@@ -353,6 +353,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 961451441}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &541215191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7959974166674557926, guid: 4bfb8c27f20ba422d9f057a8d69fdc40,
+    type: 3}
+  m_PrefabInstance: {fileID: 961451441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541215190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33fccd5fb27934a02a383bc74e5d65ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &961451441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -363,7 +375,7 @@ PrefabInstance:
     - target: {fileID: 501025604332310453, guid: 4bfb8c27f20ba422d9f057a8d69fdc40,
         type: 3}
       propertyPath: m_Name
-      value: MapController
+      value: MazeController
       objectReference: {fileID: 0}
     - target: {fileID: 501025604332310453, guid: 4bfb8c27f20ba422d9f057a8d69fdc40,
         type: 3}
@@ -458,15 +470,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabPlayer: {fileID: 8852600108512910000, guid: 79195af51471a204f9cafbb8be9200a1,
     type: 3}
-  prefGoal: {fileID: 1053912879568414727, guid: a28df3163ee0d5d46a6073913cb849fa,
+  prefabGoal: {fileID: 1053912879568414727, guid: a28df3163ee0d5d46a6073913cb849fa,
     type: 3}
-  mazeWidth: 7
-  mazeHeight: 10
-  mapGenerationSpeed: 0.25
+  prefabEnemy: {fileID: 7983105016545114354, guid: f4b941b4c7a129f4eb12038784887258,
+    type: 3}
+  mazeWidth: 5
+  mazeHeight: 5
+  mapGenerationSpeed: 0.2
   mazeControllerGameObject: {fileID: 541215190}
   setupCamera: {fileID: 503617470}
   uIController: {fileID: 1739103393}
-  mazeController: {fileID: 0}
+  mazeController: {fileID: 541215191}
 --- !u!4 &1209250084
 Transform:
   m_ObjectHideFlags: 0

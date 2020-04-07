@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class MazeCell : MonoBehaviour
 {
+    [SerializeField]
+    private List<MazeCell> connections;
+
     private (int x, int y) cord;
 
     [SerializeField]
@@ -29,6 +33,8 @@ public class MazeCell : MonoBehaviour
         eastWallRenderer   = eastWall.GetComponent<Renderer>();
         westWallRenderer   = westWall.GetComponent<Renderer>();
         centerWallRenderer = centerWall.GetComponent<Renderer>();
+
+        connections = new List<MazeCell>();
     }
 
     /* Getters */
@@ -37,6 +43,9 @@ public class MazeCell : MonoBehaviour
     }
     public int GetY() {
         return cord.y;
+    }
+    public List<MazeCell> getConnections() {
+        return connections;
     }
 
     /* Setters */
@@ -47,26 +56,6 @@ public class MazeCell : MonoBehaviour
     }
 
     /* Disable Wall Methods */
-    public void DisableNorthWall()
-    {
-        northWall.SetActive(false);
-    }
-
-    public void DisableSouthWall()
-    {
-        southWall.SetActive(false);
-    }
-
-    public void DisableEastWall()
-    {
-        eastWall.SetActive(false);
-    }
-
-    public void DisableWestWall()
-    {
-        westWall.SetActive(false);
-    }
-
     public void DisableCenterWall() {
         centerWall.SetActive(false);
     }
@@ -84,7 +73,7 @@ public class MazeCell : MonoBehaviour
     /* Overrides */
     public override bool Equals(object other) {
         MazeCell otherMazeCell = (MazeCell)other;
-        if (this.cord.x == otherMazeCell.cord.x && this.cord.x == otherMazeCell.cord.y) {
+        if (this.cord.x == otherMazeCell.cord.x && this.cord.y == otherMazeCell.cord.y) {
             return true;
         } else {
             return false;
@@ -93,5 +82,37 @@ public class MazeCell : MonoBehaviour
 
     public override int GetHashCode() {
         return base.GetHashCode();
+    }
+
+    /* Static Methods */
+    public static void ConnectMazeCells(MazeCell current, MazeCell next) {
+        (int x_t, int y_t) = (current.GetX() - next.GetX(), current.GetY() - next.GetY());
+
+        current.DisableCenterWall();
+        if (x_t == 0 && y_t == 1) {
+            current.northWall.SetActive(false);
+            next.southWall.SetActive(false);
+            AddConnection();
+        }
+        if (x_t == 0 && y_t == -1) {
+            current.southWall.SetActive(false);
+            next.northWall.SetActive(false);
+            AddConnection();
+        }
+        if (x_t == 1 && y_t == 0) {
+            current.eastWall.SetActive(false);
+            next.westWall.SetActive(false);
+            AddConnection();
+        }
+        if (x_t == -1 && y_t == 0) {
+            current.westWall.SetActive(false);
+            next.eastWall.SetActive(false);
+            AddConnection();
+        }
+
+        void AddConnection() {
+            current.connections.Add(next);
+            next.connections.Add(current);
+        }
     }
 }

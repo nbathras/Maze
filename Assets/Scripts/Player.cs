@@ -39,8 +39,6 @@ public class Player : MonoBehaviour
     }
 
     private void Update() {
-        Debug.Log(GameManager.instance.mazeController.WorldCordToMazeCord(transform.position));
-
         if (Input.GetKeyDown(KeyCode.Space)) {
             camerasIndex = (camerasIndex + 1) % cameras.Count;
             ActivateCamera(camerasIndex);
