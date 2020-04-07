@@ -15,13 +15,18 @@ public class MazeCell : MonoBehaviour
     private GameObject westWall;
     private Renderer westWallRenderer;
 
+    [SerializeField]
+    private GameObject centerWall;
+    private Renderer centerWallRenderer;
+
     /* Unity Methods */
     private void Awake()
     {
-        northWallRenderer = northWall.GetComponent<Renderer>();
-        southWallRenderer = southWall.GetComponent<Renderer>();
-        eastWallRenderer  = eastWall.GetComponent<Renderer>();
-        westWallRenderer  = westWall.GetComponent<Renderer>();
+        northWallRenderer  = northWall.GetComponent<Renderer>();
+        southWallRenderer  = southWall.GetComponent<Renderer>();
+        eastWallRenderer   = eastWall.GetComponent<Renderer>();
+        westWallRenderer   = westWall.GetComponent<Renderer>();
+        centerWallRenderer = centerWall.GetComponent<Renderer>();
     }
 
     /* Disable Wall Methods */
@@ -45,12 +50,17 @@ public class MazeCell : MonoBehaviour
         westWall.SetActive(false);
     }
 
+    public void DisableCenterWall() {
+        centerWall.SetActive(false);
+    }
+
     /* Set Color Method */
     public void SetWallColor(Color color)
     {
-        northWallRenderer.material.color = color;
-        southWallRenderer.material.color = color;
-        eastWallRenderer.material.color  = color;
-        westWallRenderer.material.color  = color;
+        northWallRenderer.material.color  = color;
+        southWallRenderer.material.color  = color;
+        eastWallRenderer.material.color   = color;
+        westWallRenderer.material.color   = color;
+        centerWallRenderer.material.color = color;
     }
 }

@@ -28,6 +28,7 @@ public class MazeController : MonoBehaviour
                 gameObject.transform.SetParent(transform);
 
                 maze[i, j] = gameObject.GetComponent<MazeCell>();
+                maze[i, j].SetWallColor(Color.green);
             }
         }
 
@@ -40,7 +41,6 @@ public class MazeController : MonoBehaviour
         bool isFirstRun = true;
         while (true)
         {
-            yield return new WaitForSeconds(GameManager.instance.GetMapGenerationSpeed());
 
             // Find the first open spot
             (int x_c, int y_c) = FindOpenMazeCell(boolMaze);
@@ -54,6 +54,8 @@ public class MazeController : MonoBehaviour
 
             // Debug.Log("Test1: Current: " + x_c + ", " + y_c);
             maze[x_c, y_c].SetWallColor(Color.red);
+
+            yield return new WaitForSeconds(GameManager.instance.GetMapGenerationSpeed());
 
             if (!isFirstRun)
             {
@@ -84,21 +86,12 @@ public class MazeController : MonoBehaviour
             }
 
             boolMaze[x_c, y_c] = true;
+            maze[x_c, y_c].DisableCenterWall();
             maze[x_c, y_c].SetWallColor(Color.gray);
             isFirstRun = false;
         }
-    }
 
-    private const float xOffset = -4.5f;
-    private const float yOffset = 0f;
-    private const float zOffset = 4.5f;
-    private Vector3 MazeCordToWorldCord(int x, int y)
-    {
-        return new Vector3(
-            (xOffset * (maze.GetLength(0) / GameManager.instance.GetMapScale()) + x),
-            (yOffset),
-            (zOffset * (maze.GetLength(1) / GameManager.instance.GetMapScale()) - y)
-        );
+        GameManager.instance.CreatePlayer();
     }
 
     private void OpenWalls(int x_c, int y_c, int x_n, int y_n)
@@ -108,6 +101,7 @@ public class MazeController : MonoBehaviour
 
         (int x_t, int y_t) = (x_c - x_n, y_c - y_n);
 
+        currentMazeCell.DisableCenterWall();
         if (x_t == 0 && y_t == 1)
         {
             currentMazeCell.DisableNorthWall();
@@ -204,5 +198,17 @@ public class MazeController : MonoBehaviour
         }
 
         return openMazeCell;
+    }
+
+        private const float xOffset = -4.5f;
+    private const float yOffset = 0f;
+    private const float zOffset = 4.5f;
+    public Vector3 MazeCordToWorldCord(int x, int y)
+    {
+        return new Vector3(
+            (xOffset * (maze.GetLength(0) / GameManager.instance.GetMapScale()) + x),
+            (yOffset),
+            (zOffset * (maze.GetLength(1) / GameManager.instance.GetMapScale()) - y)
+        );
     }
 }
