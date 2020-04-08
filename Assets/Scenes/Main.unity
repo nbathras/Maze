@@ -474,11 +474,13 @@ MonoBehaviour:
     type: 3}
   prefabEnemy: {fileID: 7983105016545114354, guid: f4b941b4c7a129f4eb12038784887258,
     type: 3}
-  mazeWidth: 5
-  mazeHeight: 5
-  mapGenerationSpeed: 0.2
+  mazeWidth: 10
+  mazeHeight: 10
+  mapGenerationSpeed: 0.1
   mazeControllerGameObject: {fileID: 541215190}
+  playerGameObject: {fileID: 0}
   setupCamera: {fileID: 503617470}
+  setupComplete: 0
   uIController: {fileID: 1739103393}
   mazeController: {fileID: 541215191}
 --- !u!4 &1209250084

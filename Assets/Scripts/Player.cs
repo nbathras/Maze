@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     private List<GameObject> cameras;
     private int camerasIndex;
 
+    public Vector3 movement;
+
     /* Unity Methods */
     private void Start() {
         rb = GetComponent<Rigidbody>();
@@ -49,7 +51,9 @@ public class Player : MonoBehaviour
         float forwardMovement = Input.GetAxis("Vertical");
         float sideMovement = Input.GetAxis("Horizontal");
 
-        Vector3 movement = new Vector3(sideMovement, 0, forwardMovement);
+        movement = new Vector3(sideMovement, 0, forwardMovement);
+
+        // Debug.Log(movement.magnitude);
 
         rb.transform.Translate(movement * movementSpeed * Time.deltaTime);
 

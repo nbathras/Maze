@@ -25,11 +25,12 @@ public class GameManager : MonoBehaviour
     /* GameObject instances */
     [SerializeField]
     private GameObject mazeControllerGameObject;
-    private GameObject playerGameObject;
+    public GameObject playerGameObject;
     private GameObject goalGameObject;
     private GameObject enemyGameObject;
     [SerializeField]
     private GameObject setupCamera;
+    public bool setupComplete = false;
 
     /* Component instances */
     [SerializeField]
@@ -54,32 +55,6 @@ public class GameManager : MonoBehaviour
         mazeController.GenerateMaze(mazeWidth, mazeHeight);
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            RunAStar();
-        }
-    }
-
-    private void RunAStar() {
-        if (playerGameObject != null && enemyGameObject != null) {
-            (int x, int y) playerCord = mazeController.WorldCordToMazeCord(playerGameObject.transform.position);
-            (int x, int y) enemyCord = mazeController.WorldCordToMazeCord(enemyGameObject.transform.position);
-
-            List<MazeCell> path = AStar.RunAStar(
-                mazeController.GetMazeCell(enemyCord.x, enemyCord.y),
-                mazeController.GetMazeCell(playerCord.x, playerCord.y)
-            );
-
-            string pathString = "";
-            foreach (MazeCell mazeCell in path) {
-                pathString += mazeCell.name + " => ";
-            }
-            Debug.Log(pathString);
-
-            enemyGameObject.transform.Translate(path[1].transform.position - enemyGameObject.transform.position);
-        }
-    }
-
     public void CreatePlayer() {
         Vector3 playerPosition = mazeController.MazeCordToWorldCord(Random.Range(0, mazeWidth), Random.Range(0, mazeHeight)) + new Vector3(0,.125f,0);
 
@@ -94,6 +69,8 @@ public class GameManager : MonoBehaviour
 
         Vector3 enemyPosition = mazeController.MazeCordToWorldCord(Random.Range(0, mazeWidth), Random.Range(0, mazeHeight)) + new Vector3(0, .125f, 0);
         enemyGameObject = Instantiate(prefabEnemy, enemyPosition, new Quaternion());
+
+        setupComplete = true;
     }
 
     /* Getter */
