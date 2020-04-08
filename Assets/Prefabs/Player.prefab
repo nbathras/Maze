@@ -305,7 +305,7 @@ MonoBehaviour:
   firstPersonCamera: {fileID: 1078896171536051128}
   topDownCamera: {fileID: 6050635683487932656}
   movementSpeed: 2
-  speedH: 4
+  speedH: 8
 --- !u!114 &7516686640165752342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8b9af94fc98a240b18a319c7c69e7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locomationAnimationSmoothTime: 0.1
 --- !u!33 &6272351364460835998
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -480,7 +481,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: f64e8afa980452d449d3a5df811f2178,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: GFX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f64e8afa980452d449d3a5df811f2178, type: 3}

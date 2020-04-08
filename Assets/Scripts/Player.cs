@@ -18,13 +18,22 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float speedH = 4;
 
-
     private float yaw;
+    private Vector3 movement;
     private Rigidbody rb;
     private List<GameObject> cameras;
     private int camerasIndex;
 
-    public Vector3 movement;
+    public float MaxVelocity {
+        get {
+            return movementSpeed;
+        }
+    }
+    public float CurrentVelocity {
+        get {
+            return movement.magnitude * movementSpeed;
+        }
+    }
 
     /* Unity Methods */
     private void Start() {
@@ -49,11 +58,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate() {
         float forwardMovement = Input.GetAxis("Vertical");
-        float sideMovement = Input.GetAxis("Horizontal");
 
-        movement = new Vector3(sideMovement, 0, forwardMovement);
-
-        // Debug.Log(movement.magnitude);
+        movement = new Vector3(0, 0, forwardMovement);
 
         rb.transform.Translate(movement * movementSpeed * Time.deltaTime);
 
