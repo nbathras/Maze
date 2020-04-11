@@ -5,6 +5,9 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
+    private int detectionDistance = 5;
+
+    [SerializeField]
     private float locomationAnimationSmoothTime = .1f;
 
     [SerializeField]
@@ -15,8 +18,6 @@ public class Enemy : MonoBehaviour
     private List<MazeCell> path;
     private int pathIndex = 1;
 
-    public bool isMoving = false;
-
     private void Awake() {
         StartCoroutine(TrackCoroutine());
 
@@ -24,23 +25,34 @@ public class Enemy : MonoBehaviour
     }
 
     private void Update() {
-        if (GameManager.instance.setupComplete) {
-            isMoving = false;
+        if (GameManager.instance.setupComplete && path != null) {
+            // The player character is to far away to bet detected
+            if (path.Count > detectionDistance)
+            {
+                return;
+            }
+
             Vector3 currentPosition = transform.position;
             Vector3 targetPosition;
 
-            if (path != null && pathIndex < path.Count - 1) {
+            // naviage to the next mazecell which does not contain the player
+            if (pathIndex < path.Count - 1) {
                 targetPosition = path[pathIndex].transform.position + new Vector3(0, .125f, 0);
+            // navigate to the player in the mazecell
             } else {
                 targetPosition = GameManager.instance.playerGameObject.transform.position + new Vector3(0, .125f, 0);
             }
 
+            // Look at the target
             transform.LookAt(targetPosition);
+
+            // If close enough stop moving and stop playign the runnig animation
             if (Vector3.Magnitude(currentPosition - targetPosition) < 0.3f) {
-                if (path != null && pathIndex < path.Count) {
+                if (pathIndex < path.Count) {
                     pathIndex += 1;
                 }
                 animator.SetFloat("speedPercent", 0f, locomationAnimationSmoothTime, Time.deltaTime);
+            // If not close enough keep moving towards target well playing the running animation
             } else {
                 animator.SetFloat("speedPercent", 1f, locomationAnimationSmoothTime, Time.deltaTime);
                 float step = movementSpeed * Time.deltaTime;

@@ -24,9 +24,11 @@ public class Player : MonoBehaviour
     private List<GameObject> cameras;
     private int camerasIndex;
 
+    private bool isShifting = false;
+
     public float MaxVelocity {
         get {
-            return movementSpeed;
+            return movementSpeed * 2;
         }
     }
     public float CurrentVelocity {
@@ -54,12 +56,29 @@ public class Player : MonoBehaviour
             camerasIndex = (camerasIndex + 1) % cameras.Count;
             ActivateCamera(camerasIndex);
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            isShifting = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            isShifting = false;
+        }
     }
 
     private void FixedUpdate() {
         float forwardMovement = Input.GetAxis("Vertical");
+        if (forwardMovement < 0)
+        {
+            forwardMovement = 0;
+        }
 
         movement = new Vector3(0, 0, forwardMovement);
+        if (isShifting)
+        {
+            movement *= 2;
+        }
 
         rb.transform.Translate(movement * movementSpeed * Time.deltaTime);
 
